@@ -3,13 +3,18 @@ package com.dvt.weatherapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.dvt.weatherapp.screens.TemperatureRangeBar
+import com.dvt.weatherapp.screens.TopWeatherGraphicPreview
+import com.dvt.weatherapp.screens.WeatherList
 import com.dvt.weatherapp.ui.theme.WeatherAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,26 +23,29 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
+               MainScaffold()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun MainScaffold() {
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column {
+            TopWeatherGraphicPreview()
+            TemperatureRangeBar()
+            WeatherList()
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     WeatherAppTheme {
-        Greeting("Android")
+        MainScaffold()
     }
 }
