@@ -3,6 +3,10 @@ buildscript {
         compose_ui_version = '1.1.1'
         koin_version = '3.3.2'
         koin_compose_version = '3.4.1'
+        ok_http_version= "4.10.0"
+        retrofit_version= "2.9.0"
+        gson_version= "2.9.0"
+
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
