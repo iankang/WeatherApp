@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class City(
     @SerializedName("coord")
-    var coord: CoordX?,
+    var coord: Coord?,
     @SerializedName("country")
     var country: String?,
     @SerializedName("id")
