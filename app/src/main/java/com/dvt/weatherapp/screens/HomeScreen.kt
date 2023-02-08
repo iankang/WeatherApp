@@ -36,17 +36,14 @@ fun TopWeatherGraphic(){
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(340.dp)){
-        
+
         Image(
             painter = painterResource(id = R.drawable.sea_sunnypng),
             contentDescription = "sunny image",
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth
         )
-
         TemperatureBox()
-
-
     }
 }
 
@@ -95,7 +92,6 @@ private fun TemperatureText(
         desc!!,
         fontSize = sizeDesc!!,
         color = Color.White,
-
     )
 }
 
