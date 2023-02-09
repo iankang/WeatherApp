@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class WeatherListResponse(
     @SerializedName("city")
-    var city: CityX?,
+    var city: City?,
     @SerializedName("cnt")
     var cnt: Int?,
     @SerializedName("cod")

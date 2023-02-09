@@ -197,3 +197,14 @@ fun WeatherList(){
        }
     }
 }
+
+@Composable
+@Preview(name = "day", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
+fun HomeScreen(){
+    Column {
+        TopWeatherGraphicPreview()
+        TemperatureRangeBar()
+        WeatherList()
+    }
+}

@@ -77,6 +77,19 @@ dependencies {
     // Navigation Graph
     implementation "io.insert-koin:koin-androidx-navigation:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_compose_version"
+
+    implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+    //lottie
+    implementation "com.airbnb.android:lottie-compose:$lottie_compose_version"
+
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_permission"
+
+    //Coil (Image Uploading)
+    implementation "com.google.accompanist:accompanist-coil:$accompanist_coil"
+
+    //Paging 3.0
+    implementation "androidx.paging:paging-compose:$paging_compose"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

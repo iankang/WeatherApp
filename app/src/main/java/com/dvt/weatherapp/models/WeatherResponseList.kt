@@ -11,7 +11,7 @@ data class WeatherResponseList(
     @SerializedName("cod")
     var cod: String?,
     @SerializedName("list")
-    var list: List<>?,
+    var list: List<WeatherList>?,
     @SerializedName("message")
     var message: Int?
 )
