@@ -28,11 +28,16 @@ import androidx.navigation.compose.rememberNavController
 import com.dvt.weatherapp.navigation.NavDrawerItem
 import com.dvt.weatherapp.screens.*
 import com.dvt.weatherapp.ui.theme.WeatherAppTheme
+import com.dvt.weatherapp.utils.SessionManager
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+
+    private val sessionManager by inject<SessionManager>()
+
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
