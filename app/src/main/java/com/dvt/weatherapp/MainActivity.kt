@@ -28,6 +28,9 @@ import androidx.navigation.compose.rememberNavController
 import com.dvt.weatherapp.navigation.NavDrawerItem
 import com.dvt.weatherapp.screens.*
 import com.dvt.weatherapp.ui.theme.WeatherAppTheme
+import com.dvt.weatherapp.ui.screens.FavoritesScreen
+import com.dvt.weatherapp.ui.screens.HomeScreen
+import com.dvt.weatherapp.ui.screens.PlacesScreen
 import com.dvt.weatherapp.utils.SessionManager
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState

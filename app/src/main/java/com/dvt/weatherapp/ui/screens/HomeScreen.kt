@@ -1,4 +1,4 @@
-package com.dvt.weatherapp.screens
+package com.dvt.weatherapp.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image

@@ -1,6 +1,6 @@
 package com.dvt.weatherapp.di
 
-import com.dvt.weatherapp.repository.WeatherApi
+import com.dvt.weatherapp.data.api.WeatherApi
 import org.koin.dsl.module
 
 val weatherRepositoryModule = module {

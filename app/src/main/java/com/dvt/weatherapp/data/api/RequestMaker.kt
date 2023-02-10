@@ -1,4 +1,4 @@
-package com.dvt.weatherapp.network.api
+package com.dvt.weatherapp.data.api
 
 import android.util.Log
 import com.dvt.weatherapp.models.WeatherApiResponse

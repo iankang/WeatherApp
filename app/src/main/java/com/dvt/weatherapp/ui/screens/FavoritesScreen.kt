@@ -1,4 +1,4 @@
-package com.dvt.weatherapp.screens
+package com.dvt.weatherapp.ui.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column

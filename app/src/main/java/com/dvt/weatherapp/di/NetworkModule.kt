@@ -1,7 +1,7 @@
 package com.dvt.weatherapp.di
 
 import android.content.Context
-import com.dvt.weatherapp.network.api.WeatherApiRequests
+import com.dvt.weatherapp.data.api.WeatherApiRequests
 import com.dvt.weatherapp.utils.Constants.WEATHER_BASE_API
 
 import okhttp3.OkHttpClient

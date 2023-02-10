@@ -1,10 +1,8 @@
-package com.dvt.weatherapp.repository
+package com.dvt.weatherapp.data.api
 
 import com.dvt.weatherapp.models.WeatherApiResponse
 import com.dvt.weatherapp.models.WeatherListResponse
 import com.dvt.weatherapp.models.WeatherResponse
-import com.dvt.weatherapp.network.api.WeatherApiRequests
-import com.dvt.weatherapp.network.api.weatherApiCall
 
 import org.koin.java.KoinJavaComponent.inject
 
@@ -20,7 +18,7 @@ class WeatherApi {
         return weatherApiCall(apiCall = {weatherApi.getWeather(lat, lon)})
     }
 
-    suspend fun getWeatherList(
+    suspend fun getWeatherForecast(
         lat: Double,
         lon:Double
     ):WeatherApiResponse<WeatherListResponse>{

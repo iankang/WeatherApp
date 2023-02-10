@@ -1,4 +1,4 @@
-package com.dvt.weatherapp.network.api
+package com.dvt.weatherapp.data.api
 
 import com.dvt.weatherapp.BuildConfig
 import com.dvt.weatherapp.models.WeatherListResponse

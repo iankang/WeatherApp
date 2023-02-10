@@ -1,8 +1,7 @@
-package com.dvt.weatherapp.screens
+package com.dvt.weatherapp.ui.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,7 +12,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun PlacesScreen(){
-    val singapore = LatLng(1.35, 103.87)
+    val singapore = LatLng(-1.2921, 36.8219)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(singapore, 10f)
     }
