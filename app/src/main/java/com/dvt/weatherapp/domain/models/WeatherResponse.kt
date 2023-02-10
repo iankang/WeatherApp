@@ -1,6 +1,8 @@
 package com.dvt.weatherapp.domain.models
 
 
+import com.dvt.weatherapp.domain.entities.WeatherListEntity
+import com.dvt.weatherapp.domain.entities.WeatherResponseEntity
 import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
@@ -31,3 +33,10 @@ data class WeatherResponse(
     @SerializedName("wind")
     var wind: Wind?
 )
+
+fun WeatherResponse.toEntity(): WeatherResponseEntity {
+    return WeatherResponseEntity(
+        base, clouds, cod, coord, dt, id, main, name, sys, timezone, visibility, WeatherListEntity(), wind
+    )
+}
+

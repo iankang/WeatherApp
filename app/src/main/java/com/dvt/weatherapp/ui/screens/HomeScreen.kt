@@ -21,18 +21,22 @@ import androidx.compose.ui.unit.sp
 import com.dvt.weatherapp.R
 import com.dvt.weatherapp.ui.theme.SEABLUE
 import com.dvt.weatherapp.ui.theme.WeatherAppTheme
+import com.dvt.weatherapp.viewmodels.HomeViewModel
 
 @Composable
 @Preview(name = "day", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 fun TopWeatherGraphicPreview(){
     WeatherAppTheme {
-        TopWeatherGraphic()
+        TopWeatherGraphic(null)
     }
 }
 
 @Composable
-fun TopWeatherGraphic(){
+fun TopWeatherGraphic(
+    homeViewModel: HomeViewModel? = null
+) {
+    homeViewModel?.getWeather()
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(340.dp)){
@@ -201,9 +205,11 @@ fun WeatherList(){
 @Composable
 @Preview(name = "day", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
-fun HomeScreen(padding: PaddingValues? = null) {
+fun HomeScreen(
+    padding: PaddingValues? = null,
+    homeViewModel: HomeViewModel? = null) {
     Column {
-        TopWeatherGraphicPreview()
+        TopWeatherGraphic(homeViewModel)
         TemperatureRangeBar()
         WeatherList()
     }
