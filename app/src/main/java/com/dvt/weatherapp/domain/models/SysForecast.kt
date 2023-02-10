@@ -1,4 +1,4 @@
-package com.dvt.weatherapp.models
+package com.dvt.weatherapp.domain.models
 
 
 import com.google.gson.annotations.SerializedName

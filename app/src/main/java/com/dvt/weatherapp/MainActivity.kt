@@ -21,24 +21,35 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dvt.weatherapp.domain.models.LocationDetails
 import com.dvt.weatherapp.navigation.NavDrawerItem
 import com.dvt.weatherapp.ui.theme.WeatherAppTheme
 import com.dvt.weatherapp.ui.screens.FavoritesScreen
 import com.dvt.weatherapp.ui.screens.HomeScreen
 import com.dvt.weatherapp.ui.screens.PlacesScreen
 import com.dvt.weatherapp.utils.SessionManager
+import com.dvt.weatherapp.utils.locationFlow
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
     private val sessionManager by inject<SessionManager>()
+
+    private val fusedLocationClient: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(this)
+    }
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +58,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 val navController = rememberNavController()
-                MultiplePermissions()
+                MultiplePermissions(this::fetchLocationUpdates)
                 MainScaffold(navController)
+            }
+        }
+    }
+
+    private fun fetchLocationUpdates() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                fusedLocationClient.locationFlow().collect {
+                    it?.let { location ->
+                        val location = LocationDetails(location.latitude,location.longitude)
+                        sessionManager.saveLocation(location)
+                    }
+                }
             }
         }
     }
@@ -117,16 +141,16 @@ fun MainScaffold(
             }
 
         }
-    ) {
+    ) { padding:PaddingValues ->
         NavHost(navController!!, startDestination = NavDrawerItem.Home.route) {
             composable(NavDrawerItem.Home.route){
-                HomeScreen()
+                HomeScreen(padding)
             }
             composable(NavDrawerItem.Favorites.route){
-                FavoritesScreen()
+                FavoritesScreen(padding)
             }
             composable(NavDrawerItem.Places.route){
-                PlacesScreen()
+                PlacesScreen(padding)
             }
         }
     }
@@ -143,7 +167,7 @@ fun DefaultPreview() {
 
 @ExperimentalPermissionsApi
 @Composable
-fun MultiplePermissions() {
+fun MultiplePermissions(fetchLocationUpdates :() -> Unit) {
     val permissionStates = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -181,7 +205,7 @@ fun MultiplePermissions() {
                                You can use this permission to now acquire the location of the device.
                                You can perform some other tasks here.
                             */
-                            Text(text = "Read Ext Storage permission has been granted")
+                           fetchLocationUpdates.invoke()
                         }
                         it.shouldShowRationale -> {
                             /*Happens if a user denies the permission two times
@@ -205,7 +229,7 @@ fun MultiplePermissions() {
                                You can use this permission to now acquire the location of the device.
                                You can perform some other tasks here.
                             */
-                            Text(text = "Location permission has been granted")
+                            fetchLocationUpdates.invoke()
                         }
                         it.shouldShowRationale -> {
                             /*Happens if a user denies the permission two times
@@ -227,4 +251,6 @@ fun MultiplePermissions() {
             }
         }
     }
+
+
 }

@@ -67,6 +67,7 @@ dependencies {
     implementation 'androidx.compose.material:material:1.1.1'
 
     implementation "androidx.room:room-runtime:$room_version"
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-paging:$room_version"
@@ -109,7 +110,6 @@ dependencies {
     implementation "com.google.maps.android:maps-compose-widgets:$compose_widgets"
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.test.ext:junit-ktx:$android_x_junit"
-
     testImplementation "androidx.test:core-ktx:$android_x_core"
     testImplementation "org.robolectric:robolectric:$robolectric_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

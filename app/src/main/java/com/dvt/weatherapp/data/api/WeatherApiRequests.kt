@@ -1,8 +1,8 @@
 package com.dvt.weatherapp.data.api
 
 import com.dvt.weatherapp.BuildConfig
-import com.dvt.weatherapp.models.WeatherListResponse
-import com.dvt.weatherapp.models.WeatherResponse
+import com.dvt.weatherapp.domain.models.WeatherListResponse
+import com.dvt.weatherapp.domain.models.WeatherResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,7 +1,7 @@
 package com.dvt.weatherapp.data.api
 
 import android.util.Log
-import com.dvt.weatherapp.models.WeatherApiResponse
+import com.dvt.weatherapp.domain.models.WeatherApiResponse
 import kotlinx.coroutines.*
 import retrofit2.Response
 import java.io.IOException

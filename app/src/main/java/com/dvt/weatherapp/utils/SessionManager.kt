@@ -3,7 +3,7 @@ package com.dvt.weatherapp.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.dvt.weatherapp.R
-import com.dvt.weatherapp.models.LocationDetails
+import com.dvt.weatherapp.domain.models.LocationDetails
 import com.google.gson.Gson
 
 class SessionManager(context: Context) {

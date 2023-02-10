@@ -1,9 +1,9 @@
-package com.dvt.weatherapp.models
+package com.dvt.weatherapp.domain.models
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Main(
+data class MainForecast(
     @SerializedName("feels_like")
     var feelsLike: Double?,
     @SerializedName("grnd_level")
@@ -16,6 +16,8 @@ data class Main(
     var seaLevel: Int?,
     @SerializedName("temp")
     var temp: Double?,
+    @SerializedName("temp_kf")
+    var tempKf: Double?,
     @SerializedName("temp_max")
     var tempMax: Double?,
     @SerializedName("temp_min")
