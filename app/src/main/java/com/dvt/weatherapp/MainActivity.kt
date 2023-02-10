@@ -26,7 +26,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dvt.weatherapp.navigation.NavDrawerItem
-import com.dvt.weatherapp.screens.*
 import com.dvt.weatherapp.ui.theme.WeatherAppTheme
 import com.dvt.weatherapp.ui.screens.FavoritesScreen
 import com.dvt.weatherapp.ui.screens.HomeScreen
