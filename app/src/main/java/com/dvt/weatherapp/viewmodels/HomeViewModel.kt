@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.dvt.weatherapp.domain.models.LocationDetails
 import com.dvt.weatherapp.domain.states.WeatherState
+import com.dvt.weatherapp.repository.WeatherForecastRepository
 import com.dvt.weatherapp.repository.WeatherRepository
 import com.dvt.weatherapp.utils.SessionManager
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val applicationContext: Application,
     private val weatherRepository: WeatherRepository,
+    private val weatherForecastRepository: WeatherForecastRepository,
     private val sessionManager: SessionManager
 ):AndroidViewModel(applicationContext) {
 
@@ -29,10 +31,8 @@ class HomeViewModel(
     val weatherState: StateFlow<WeatherState> = _weatherState.asStateFlow()
 
     init {
-        locDetails = sessionManager.fetchLocation()
-        coroutineScope.launch {
-            weatherRepository.refreshWeather(locDetails!!)
-        }
+        fetchAndStore()
+        fetchAndStoreForecasts()
     }
 
     fun getWeather(){
@@ -47,6 +47,30 @@ class HomeViewModel(
             }
         }
 
+    }
+
+
+    fun fetchAndStore() {
+        coroutineScope.launch {
+            try {
+                locDetails = sessionManager.fetchLocation()
+                weatherRepository.refreshWeather(locDetails!!)
+
+            } catch (e: Exception) {
+                Log.e("exception", e.toString())
+            }
+        }
+    }
+
+    fun fetchAndStoreForecasts(){
+        coroutineScope.launch {
+            try{
+                locDetails = sessionManager.fetchLocation()
+                weatherForecastRepository.getAndStoreForecasts(locDetails!!)
+            } catch (e:Exception){
+                Log.e("ForeCastexception", e.toString())
+            }
+        }
     }
 
 }

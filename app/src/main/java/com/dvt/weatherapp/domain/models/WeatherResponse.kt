@@ -29,14 +29,14 @@ data class WeatherResponse(
     @SerializedName("visibility")
     var visibility: Int?,
     @SerializedName("weather")
-    var weather: List<Weather?>?,
+    var weather: List<Weather>?,
     @SerializedName("wind")
     var wind: Wind?
 )
 
 fun WeatherResponse.toEntity(): WeatherResponseEntity {
     return WeatherResponseEntity(
-        base, clouds, cod, coord, dt, id, main, name, sys, timezone, visibility, WeatherListEntity(), wind
+        base, clouds, cod, coord, dt, id, main, name, sys, timezone, visibility, WeatherListEntity(weather), wind
     )
 }
 

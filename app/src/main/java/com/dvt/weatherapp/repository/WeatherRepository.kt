@@ -1,5 +1,6 @@
 package com.dvt.weatherapp.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.dvt.weatherapp.data.api.WeatherApi
 import com.dvt.weatherapp.data.db.WeatherAppDB
@@ -17,14 +18,16 @@ class WeatherRepository(
     suspend fun refreshWeather(location: LocationDetails): WeatherApiResponse<WeatherResponse> {
 
         val response = weatherApi.getWeather(location.latitude, location.longitude)
-        if (response.isLoading == true && response.isOk == true) {
+        if ( response.isOk == true) {
+            Log.e("refreshWether","adding to db")
             weatherAppDB.weatherAppDAO.insertWeather(response.data?.toEntity()!!)
             return response
         }
         return response
     }
 
-    suspend fun getWeather(): List<WeatherResponseEntity> {
+    suspend fun getWeather(): WeatherResponseEntity {
+
         return weatherAppDB.weatherAppDAO.getAllWeather()
     }
 

@@ -36,7 +36,6 @@ data class WeatherResponseEntity(
     val timezone: Int? = null,
     @SerializedName("visibility")
     val visibility: Int? = null,
-    @SerializedName("weather")
     val weather: WeatherListEntity? = null,
     @SerializedName("wind")
     @Embedded

@@ -36,7 +36,7 @@ fun TopWeatherGraphicPreview(){
 fun TopWeatherGraphic(
     homeViewModel: HomeViewModel? = null
 ) {
-    homeViewModel?.getWeather()
+
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(340.dp)){

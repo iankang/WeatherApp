@@ -7,14 +7,14 @@ import com.dvt.weatherapp.domain.entities.WeatherResponseEntity
 @Dao
 interface WeatherAppDAO {
     @Query("SELECT * FROM weather_tbl")
-    suspend fun getAllWeather():List<WeatherResponseEntity>
+     fun getAllWeather():WeatherResponseEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWeather(weather:WeatherResponseEntity)
+     fun insertWeather(weather:WeatherResponseEntity)
 
     @Query("SELECT COUNT(*) FROM weather_tbl")
-    suspend fun count():Long
+     fun count():Long
 
     @Delete
-    suspend fun deleteWeather(weather: WeatherResponseEntity)
+     fun deleteWeather(weather: WeatherResponseEntity)
 }
