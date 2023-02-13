@@ -5,7 +5,7 @@ import com.dvt.weatherapp.domain.models.WeatherApiResponse
 
 class WeatherState(
     var isLoading:Boolean = false,
-    var weatherStateResponse: WeatherApiResponse<WeatherResponseEntity> = WeatherApiResponse(),
+    var weatherStateResponse: WeatherResponseEntity? = null,
     var hasError:Boolean = false,
     var error:String? = null
 ) {

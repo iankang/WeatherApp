@@ -1,18 +1,24 @@
 package com.dvt.weatherapp.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -36,18 +42,22 @@ fun TopWeatherGraphicPreview(){
 fun TopWeatherGraphic(
     homeViewModel: HomeViewModel? = null
 ) {
-
+    val weatherResponse = homeViewModel?.weatherState?.collectAsState()
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(340.dp)){
 
         Image(
-            painter = painterResource(id = R.drawable.sea_sunnypng),
+            painter = painterResource(id = homeViewModel?.getBackgroundImage(weatherResponse?.value?.weatherStateResponse?.weather?.weather?.get(0)?.id!!)!!),
             contentDescription = "sunny image",
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth
         )
-        TemperatureBox()
+        TemperatureBox(
+            degrees = homeViewModel.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.temp),
+            desc = weatherResponse?.value?.weatherStateResponse?.weather?.weather?.get(0)?.main?.capitalize(
+                Locale.current)
+        )
     }
 }
 
@@ -79,7 +89,7 @@ fun TemperatureBox(
 }
 
 @Composable
-private fun TemperatureText(
+private fun  TemperatureText(
     degrees: String?,
     sizeDegree: TextUnit?,
     desc: String?,
@@ -104,11 +114,15 @@ private fun TemperatureText(
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 fun TemperatureRangeBarPreview(){
     WeatherAppTheme {
-        TemperatureRangeBar()
+        TemperatureRangeBar(null)
     }
 }
 @Composable
-fun TemperatureRangeBar(){
+fun TemperatureRangeBar(
+    homeViewModel: HomeViewModel? = null
+){
+
+    val weatherResponse = homeViewModel?.weatherState?.collectAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -120,19 +134,19 @@ fun TemperatureRangeBar(){
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TemperatureText(degrees = "19", sizeDegree = 20.sp, desc = "min", sizeDesc = 18.sp)
+            TemperatureText(degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.tempMin), sizeDegree = 20.sp, desc = "min", sizeDesc = 18.sp)
         }
         Column(
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TemperatureText(degrees = "25", sizeDegree = 20.sp, desc = "Current", sizeDesc = 18.sp)
+            TemperatureText(degrees =  homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.temp), sizeDegree = 20.sp, desc = "Current", sizeDesc = 18.sp)
         }
         Column(
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TemperatureText(degrees = "19", sizeDegree = 20.sp, desc = "max", sizeDesc = 18.sp)
+            TemperatureText(degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.tempMax), sizeDegree = 20.sp, desc = "max", sizeDesc = 18.sp)
         }
 
     }
@@ -147,7 +161,11 @@ fun dayItemPreview(){
     }
 }
 @Composable
-fun dayItem(){
+fun dayItem(
+    dayOfWeek:String? = null,
+    weatherSymbol:Int? = null,
+    temperature:String? = null
+){
 
     Row(
         modifier = Modifier
@@ -158,7 +176,7 @@ fun dayItem(){
         verticalAlignment = Alignment.CenterVertically
         ) {
         Text(
-            "Monday",
+            dayOfWeek ?:"Monday",
             fontSize = 20.sp,
             color = Color.White,
             textAlign = TextAlign.Center
@@ -166,11 +184,11 @@ fun dayItem(){
 
         Image(
             modifier = Modifier.size(36.dp),
-            painter = painterResource(id = R.drawable.clear),
+            painter = painterResource(id = weatherSymbol!!),
             contentDescription ="weather icon" )
 
         Text(
-            "25\u00B0",
+            "${temperature}\u00B0",
             fontSize = 24.sp,
             color = Color.White,
             fontWeight = FontWeight.Bold,
@@ -189,16 +207,23 @@ fun WeatherListPreview(){
         WeatherList()
     }
 }
+
 @Composable
-fun WeatherList(){
+fun WeatherList(
+    homeViewModel: HomeViewModel? = null
+){
+    val forecasts = homeViewModel?.weatherForecastState?.collectAsState()
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
     ){
-       repeat(12){
-           item {
-               dayItem()
-           }
-       }
+        items(forecasts?.value?.weatherForecastStateResponse?.list?.list ?: emptyList()){ weather ->
+            dayItem(
+                dayOfWeek = homeViewModel?.getDayOfWeek(weather.dt?.times(1000L)!!),
+                weatherSymbol = homeViewModel?.getWeatherIcon(weather.weather?.get(0)?.id!!),
+                temperature = homeViewModel?.convertToCelsius(weather.main?.temp)
+            )
+        }
+
     }
 }
 
@@ -210,7 +235,7 @@ fun HomeScreen(
     homeViewModel: HomeViewModel? = null) {
     Column {
         TopWeatherGraphic(homeViewModel)
-        TemperatureRangeBar()
-        WeatherList()
+        TemperatureRangeBar(homeViewModel)
+        WeatherList(homeViewModel)
     }
 }

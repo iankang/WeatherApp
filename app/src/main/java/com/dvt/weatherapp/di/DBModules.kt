@@ -17,7 +17,7 @@ fun provideDao(database:WeatherAppDB): WeatherAppDAO {
     return database.weatherAppDAO
 }
 
-fun provideWeatherForecastDAO(database: WeatherAppDB):WeatherForecastDAO{
+fun provideWeatherForecastDAO(database: WeatherAppDB):WeatherForecastDAO {
     return database.weatherForecastDAO
 }
 

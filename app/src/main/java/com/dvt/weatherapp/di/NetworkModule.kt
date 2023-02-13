@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val weatherNetworkModule = module {
     factory { provideWeatherOkHttpClientInterceptor() }
-    factory { provideWeatherOkHttpClient(get(),get()) }
+    factory { provideWeatherOkHttpClient(get()) }
     factory { provideWeatherRetrofit(get()) }
     single { provideWeatherApi(get()) }
 }
@@ -29,8 +29,7 @@ fun provideWeatherOkHttpClientInterceptor(): HttpLoggingInterceptor {
     return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 }
 
-
-fun provideWeatherOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor, context: Context): OkHttpClient {
+fun provideWeatherOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
     return OkHttpClient()
         .newBuilder()
         .addInterceptor(httpLoggingInterceptor)

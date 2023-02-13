@@ -22,7 +22,7 @@ class WeatherForecastRepository(
         return response
     }
 
-    suspend fun getForecastsFromDB(): List<WeatherListResponseEntity> {
+    suspend fun getForecastsFromDB(): WeatherListResponseEntity {
         return weatherAppDB.weatherForecastDAO.getAllWeatherForecast()
     }
 

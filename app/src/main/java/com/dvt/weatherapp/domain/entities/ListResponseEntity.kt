@@ -6,6 +6,4 @@ import com.google.gson.annotations.SerializedName
 class ListResponseEntity(
     @SerializedName("list")
     var list: List<WeatherList>? = null
-) {
-
-}
+)

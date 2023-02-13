@@ -2,6 +2,7 @@ package com.dvt.weatherapp.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.dvt.weatherapp.R
 import com.dvt.weatherapp.domain.models.LocationDetails
 import com.google.gson.Gson
@@ -13,6 +14,7 @@ class SessionManager(context: Context) {
 
     companion object {
         const val USER_LOCATION = "user_location"
+        const val SHARED_PREF = "weather_shared_pref"
     }
 
     /**
@@ -30,9 +32,14 @@ class SessionManager(context: Context) {
      * function uses gson to fetch location details
      */
     fun fetchLocation(): LocationDetails? {
-        val gson = Gson()
-        val json = prefs.getString(USER_LOCATION, "")
-        return gson.fromJson(json, LocationDetails::class.java)
+        try {
+            val gson = Gson()
+            val json = prefs.getString(USER_LOCATION, "")
+            return gson.fromJson(json, LocationDetails::class.java)
+        } catch (e: Exception) {
+            Log.e(SHARED_PREF, e.toString())
+        }
+        return null
     }
 
 

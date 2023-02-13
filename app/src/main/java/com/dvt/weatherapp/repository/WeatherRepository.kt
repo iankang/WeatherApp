@@ -1,7 +1,6 @@
 package com.dvt.weatherapp.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.dvt.weatherapp.data.api.WeatherApi
 import com.dvt.weatherapp.data.db.WeatherAppDB
 import com.dvt.weatherapp.domain.entities.WeatherResponseEntity
@@ -26,8 +25,7 @@ class WeatherRepository(
         return response
     }
 
-    suspend fun getWeather(): WeatherResponseEntity {
-
+    suspend fun getWeatherFromDB(): WeatherResponseEntity {
         return weatherAppDB.weatherAppDAO.getAllWeather()
     }
 
