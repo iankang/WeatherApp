@@ -35,11 +35,13 @@ import com.dvt.weatherapp.ui.screens.HomeScreen
 import com.dvt.weatherapp.ui.screens.PlacesScreen
 import com.dvt.weatherapp.utils.SessionManager
 import com.dvt.weatherapp.utils.locationFlow
+import com.dvt.weatherapp.viewmodels.FavouritesViewModel
 import com.dvt.weatherapp.viewmodels.HomeViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,6 +50,7 @@ class MainActivity : ComponentActivity() {
 
     private val sessionManager by inject<SessionManager>()
     private val homeViewModel:HomeViewModel  by viewModel()
+    private val favoritesViewModel:FavouritesViewModel by viewModel()
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(this)
@@ -61,7 +64,7 @@ class MainActivity : ComponentActivity() {
             WeatherAppTheme {
                 val navController = rememberNavController()
                 MultiplePermissions(this::fetchLocationUpdates)
-                MainScaffold(navController, homeViewModel)
+                MainScaffold(navController, homeViewModel, favoritesViewModel)
             }
         }
     }
@@ -83,7 +86,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScaffold(
     navController: NavHostController?,
-    homeViewModel: HomeViewModel?
+    homeViewModel: HomeViewModel?,
+    favouritesViewModel: FavouritesViewModel?
 ) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -150,7 +154,7 @@ fun MainScaffold(
                 HomeScreen(padding,homeViewModel)
             }
             composable(NavDrawerItem.Favorites.route){
-                FavoritesScreen(padding)
+                FavoritesScreen(padding,favouritesViewModel,navController)
             }
             composable(NavDrawerItem.Places.route){
                 PlacesScreen(padding)
@@ -163,7 +167,7 @@ fun MainScaffold(
 @Composable
 fun DefaultPreview() {
     WeatherAppTheme {
-        MainScaffold(null, null)
+        MainScaffold(null, null,null)
     }
 }
 

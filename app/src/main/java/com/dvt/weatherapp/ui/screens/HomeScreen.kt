@@ -48,13 +48,13 @@ fun TopWeatherGraphic(
         .height(340.dp)){
 
         Image(
-            painter = painterResource(id = homeViewModel?.getBackgroundImage(weatherResponse?.value?.weatherStateResponse?.weather?.weather?.get(0)?.id!!)!!),
+            painter = painterResource(id =R.drawable.sea_sunnypng) ,
             contentDescription = "sunny image",
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth
         )
         TemperatureBox(
-            degrees = homeViewModel.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.temp),
+            degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.temp),
             desc = weatherResponse?.value?.weatherStateResponse?.weather?.weather?.get(0)?.main?.capitalize(
                 Locale.current)
         )
@@ -103,7 +103,7 @@ private fun  TemperatureText(
         textAlign = TextAlign.Center
     )
     Text(
-        desc!!,
+        desc ?: "description",
         fontSize = sizeDesc!!,
         color = Color.White,
     )

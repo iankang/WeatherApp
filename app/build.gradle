@@ -108,6 +108,7 @@ dependencies {
     implementation "com.google.maps.android:maps-compose:$maps_compose"
     implementation "com.google.android.gms:play-services-maps:$play_service_maps"
     implementation "com.google.maps.android:maps-compose-widgets:$compose_widgets"
+    implementation "com.google.android.libraries.places:places:$places_version"
     testImplementation 'junit:junit:4.13.2'
     testImplementation "androidx.test.ext:junit-ktx:$android_x_junit"
     testImplementation "androidx.test:core-ktx:$android_x_core"

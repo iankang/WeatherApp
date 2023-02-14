@@ -116,6 +116,7 @@ class HomeViewModel(
         return when(true){
             (id < 800) -> R.drawable.sea_rainy
             (id > 800) -> R.drawable.sea_cloudy
+            id == null ->R.drawable.sea_sunnypng
             else -> R.drawable.sea_sunnypng
         }
     }
