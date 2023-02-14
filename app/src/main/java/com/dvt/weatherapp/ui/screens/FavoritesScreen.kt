@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -22,29 +23,78 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dvt.weatherapp.R
 import com.dvt.weatherapp.domain.entities.FavoriteSearchEntity
+import com.dvt.weatherapp.navigation.BottomNavItem
+import com.dvt.weatherapp.navigation.NavigationGraph
 import com.dvt.weatherapp.viewmodels.FavouritesViewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Composable
 fun FavoritesScreen(
     padding: PaddingValues? = null,
     favouritesViewModel: FavouritesViewModel? = null,
-    navController: NavController? = null) {
-//    Column(modifier = Modifier.fillMaxSize()) {
-//        Text("favorites screen")
-//    }
+    navController: NavHostController? = null
+) {
+    val newNavController = rememberNavController()
+    Scaffold(
+        bottomBar = { BottomNavigation(navController = newNavController) }
+    ) {
+        NavigationGraph(newNavController, favouritesViewModel!!, it)
+    }
 
-    MainScreen(navController = navController!!,favouritesViewModel)
 }
+
+@Composable
+fun BottomNavigation(navController: NavController) {
+    val items = listOf(
+        BottomNavItem.Search,
+        BottomNavItem.Favourites
+    )
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.background,
+        contentColor = MaterialTheme.colors.onBackground
+    ) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+        items.forEach { item ->
+            BottomNavigationItem(
+                icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
+                label = {
+                    Text(
+                        text = item.title,
+                        fontSize = 9.sp
+                    )
+                },
+                selectedContentColor = MaterialTheme.colors.onBackground,
+                unselectedContentColor = MaterialTheme.colors.onBackground.copy(0.4f),
+                alwaysShowLabel = true,
+                selected = currentRoute == item.screen_route,
+                onClick = {
+                    navController.navigate(item.screen_route) {
+
+                        navController.graph.startDestinationRoute?.let { screen_route ->
+                            popUpTo(screen_route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
+    }
+}
+
 
 @Composable
 @Preview(name = "day", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-fun FavoritesScreenPreview(){
+fun FavoritesScreenPreview() {
     FavoritesScreen()
 }
 
@@ -153,13 +203,13 @@ fun LocationList(
     val countries = favouritesViewModel?.searchListState?.collectAsState()
     var filteredCountries: List<FavoriteSearchEntity>
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-//        val searchedText = state.value.text
+
         filteredCountries = countries?.value ?: emptyList()
         items(filteredCountries) { filteredCountry ->
             LocationListItem(
                 locationText = filteredCountry.address ?: "empty add",
                 onItemClick = { selectedCountry ->
-                    /* Add code later */
+                    navController.navigate(BottomNavItem.Favourites.screen_route+"/${filteredCountry.placeId}")
                 }
             )
         }
@@ -178,28 +228,12 @@ fun CountryListPreview() {
     )
 }
 
-fun getListOfCountries(): ArrayList<String> {
-    val isoCountryCodes = Locale.getISOCountries()
-    val countryListWithEmojis = ArrayList<String>()
-    for (countryCode in isoCountryCodes) {
-        val locale = Locale("", countryCode)
-        val countryName = locale.displayCountry
-        val flagOffset = 0x1F1E6
-        val asciiOffset = 0x41
-        val firstChar = Character.codePointAt(countryCode, 0) - asciiOffset + flagOffset
-        val secondChar = Character.codePointAt(countryCode, 1) - asciiOffset + flagOffset
-        val flag =
-            (String(Character.toChars(firstChar)) + String(Character.toChars(secondChar)))
-        countryListWithEmojis.add("$countryName $flag")
-    }
-    return countryListWithEmojis
-}
 
 @Composable
 fun MainScreen(navController: NavController, favouritesViewModel: FavouritesViewModel?) {
     val textState = remember { mutableStateOf(TextFieldValue("")) }
     Column {
-        SearchView(textState,favouritesViewModel)
+        SearchView(textState, favouritesViewModel)
         LocationList(navController = navController, state = textState, favouritesViewModel)
     }
 }
