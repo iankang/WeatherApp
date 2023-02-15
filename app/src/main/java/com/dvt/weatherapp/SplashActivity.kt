@@ -53,10 +53,10 @@ class SplashActivity:ComponentActivity() {
         }
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenCreated {
+
             fetchLocationUpdates()
             homeViewModel.fetchAndStore()
             homeViewModel.fetchAndStoreForecasts()
-
 
             val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)

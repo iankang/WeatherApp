@@ -44,7 +44,7 @@ fun TopWeatherGraphic(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(340.dp)
+            .height(320.dp)
     ) {
         if (weatherResponse?.value?.weatherStateResponse?.weather?.weather?.isNotEmpty() == true) {
             Image(

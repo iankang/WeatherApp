@@ -19,6 +19,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,10 +27,12 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.airbnb.lottie.compose.LottieAnimation
 import com.dvt.weatherapp.R
 import com.dvt.weatherapp.domain.entities.FavoriteSearchEntity
 import com.dvt.weatherapp.navigation.BottomNavItem
 import com.dvt.weatherapp.navigation.NavigationGraph
+import com.dvt.weatherapp.ui.common.lottieAnimation
 import com.dvt.weatherapp.viewmodels.FavouritesViewModel
 import java.util.*
 
@@ -184,14 +187,19 @@ fun LocationListItem(locationText: String, onItemClick: (String) -> Unit) {
             .fillMaxWidth()
             .padding(PaddingValues(8.dp, 16.dp))
     ) {
-        Text(text = locationText, fontSize = 18.sp, color = Color.White)
+        Text(
+            text = locationText,
+            fontSize = 16.sp,
+            color = Color.White,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun LocationListItemPreview() {
-    LocationListItem(locationText = "United States 🇺🇸", onItemClick = { })
+    LocationListItem(locationText = "Kenya", onItemClick = { })
 }
 
 @Composable
@@ -209,11 +217,11 @@ fun LocationList(
             LocationListItem(
                 locationText = filteredCountry.address ?: "empty add",
                 onItemClick = { selectedCountry ->
-                    val locationDetail = favouritesViewModel?.getCoordinates(filteredCountry)
-                    filteredCountry.latitude = locationDetail?.locationDetails?.latitude
-                    filteredCountry.longitude = locationDetail?.locationDetails?.longitude
-                    filteredCountry.address = locationDetail?.address
-                    favouritesViewModel?.insertFavorite(filteredCountry)
+                  favouritesViewModel?.getCoordinates(filteredCountry)
+
+//                    filteredCountry.address = locationDetail?.address
+//                    favouritesViewModel?.insertFavorite(filteredCountry)
+                    Log.e("clicked",filteredCountry.toString())
                     navController.navigate(BottomNavItem.Favourites.screen_route+"/${filteredCountry.placeId}")
                 }
             )
@@ -239,7 +247,11 @@ fun MainScreen(navController: NavController, favouritesViewModel: FavouritesView
     val textState = remember { mutableStateOf(TextFieldValue("")) }
     Column {
         SearchView(textState, favouritesViewModel)
-        LocationList(navController = navController, state = textState, favouritesViewModel)
+        if(textState.value.text != "") {
+            LocationList(navController = navController, state = textState, favouritesViewModel)
+        } else {
+            lottieAnimation(resource = R.raw.empty_search, size = 400.dp)
+        }
     }
 }
 

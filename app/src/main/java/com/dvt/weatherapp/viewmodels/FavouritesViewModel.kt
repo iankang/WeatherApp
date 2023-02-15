@@ -102,10 +102,12 @@ class FavouritesViewModel(
         }
     }
 
-    fun getCoordinates(result: FavoriteSearchEntity): PlaceDetails {
-        var placeDetails = PlaceDetails()
-        var locationDetails = LocationDetails(0.0,0.0)
-            val placeFields = listOf(Place.Field.LAT_LNG, Place.Field.NAME)
+    fun getCoordinates(result: FavoriteSearchEntity) {
+
+
+            val placeFields = listOf(
+                Place.Field.LAT_LNG,
+            )
             val request = FetchPlaceRequest.newInstance(result.placeId!!, placeFields)
             placesClient.fetchPlace(request).addOnSuccessListener {
                 if (it != null) {
@@ -114,12 +116,19 @@ class FavouritesViewModel(
 //                        latitude = it.place.latLng?.latitude,
 //                        longitude = it.place.latLng?.longitude
 //                    )
-                    locationDetails = LocationDetails(it.place.latLng?.latitude!!,it.place.latLng?.longitude!!)
-                    placeDetails = PlaceDetails(locationDetails, it.place.name)
+                    Log.e("Coords", it.toString())
+                    Log.e("lat", it.place.latLng?.latitude!!.toString())
+                    Log.e("Long", it.place.latLng?.longitude!!.toString())
+//                    locationDetails?.latitude = it.place.latLng?.latitude!!
+//                    locationDetails?.longitude = it.place.latLng?.longitude!!
+//                    locationDetails = LocationDetails(it.place.latLng?.latitude!!,it.place.latLng?.longitude!!)
+                    result.latitude = it.place.latLng?.latitude!!
+                    result.longitude = it.place.latLng?.longitude!!
+                    insertFavorite(result)
+
                 }
             }.addOnFailureListener {
                 it.printStackTrace()
             }
-        return placeDetails
         }
     }

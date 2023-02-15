@@ -129,7 +129,6 @@ class HomeViewModel(
         }
     }
 
-
     fun getDayOfWeek(epoch:Long): String {
         val sdf = SimpleDateFormat("EEEE")
         val date = Date(epoch)
