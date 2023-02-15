@@ -1,8 +1,6 @@
 package com.dvt.weatherapp.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -32,7 +30,7 @@ import com.dvt.weatherapp.viewmodels.HomeViewModel
 @Composable
 @Preview(name = "day", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
-fun TopWeatherGraphicPreview(){
+fun TopWeatherGraphicPreview() {
     WeatherAppTheme {
         TopWeatherGraphic(null)
     }
@@ -43,20 +41,39 @@ fun TopWeatherGraphic(
     homeViewModel: HomeViewModel? = null
 ) {
     val weatherResponse = homeViewModel?.weatherState?.collectAsState()
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(340.dp)){
-
-        Image(
-            painter = painterResource(id =R.drawable.sea_sunnypng) ,
-            contentDescription = "sunny image",
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.FillWidth
-        )
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(340.dp)
+    ) {
+        if (weatherResponse?.value?.weatherStateResponse?.weather?.weather?.isNotEmpty() == true) {
+            Image(
+                painter = painterResource(
+                    id = homeViewModel.getBackgroundImage(
+                        weatherResponse.value.weatherStateResponse?.weather?.weather?.get(
+                            0
+                        )?.id!!
+                    )
+                ),
+                contentDescription = "sunny image",
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.FillWidth
+            )
+        } else {
+            Image(
+                painter = painterResource(
+                    id = R.drawable.sea_sunnypng
+                ),
+                contentDescription = "sunny image",
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.FillWidth
+            )
+        }
         TemperatureBox(
             degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.temp),
             desc = weatherResponse?.value?.weatherStateResponse?.weather?.weather?.get(0)?.main?.capitalize(
-                Locale.current)
+                Locale.current
+            )
         )
     }
 }
@@ -64,7 +81,7 @@ fun TopWeatherGraphic(
 @Composable
 @Preview(name = "day", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
-fun TemperatureBoxPreview(){
+fun TemperatureBoxPreview() {
     WeatherAppTheme {
         TemperatureBox()
     }
@@ -72,11 +89,11 @@ fun TemperatureBoxPreview(){
 
 @Composable
 fun TemperatureBox(
-    degrees:String? = "25",
-    desc:String? = "SUNNY",
-    sizeDegree:TextUnit? = 48.sp,
-    sizeDesc:TextUnit? = 36.sp
-){
+    degrees: String? = "25",
+    desc: String? = "SUNNY",
+    sizeDegree: TextUnit? = 48.sp,
+    sizeDesc: TextUnit? = 36.sp
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -89,7 +106,7 @@ fun TemperatureBox(
 }
 
 @Composable
-private fun  TemperatureText(
+private fun TemperatureText(
     degrees: String?,
     sizeDegree: TextUnit?,
     desc: String?,
@@ -112,15 +129,16 @@ private fun  TemperatureText(
 @Composable
 @Preview(name = "day", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
-fun TemperatureRangeBarPreview(){
+fun TemperatureRangeBarPreview() {
     WeatherAppTheme {
         TemperatureRangeBar(null)
     }
 }
+
 @Composable
 fun TemperatureRangeBar(
     homeViewModel: HomeViewModel? = null
-){
+) {
 
     val weatherResponse = homeViewModel?.weatherState?.collectAsState()
     Row(
@@ -134,19 +152,34 @@ fun TemperatureRangeBar(
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TemperatureText(degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.tempMin), sizeDegree = 20.sp, desc = "min", sizeDesc = 18.sp)
+            TemperatureText(
+                degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.tempMin),
+                sizeDegree = 20.sp,
+                desc = "min",
+                sizeDesc = 18.sp
+            )
         }
         Column(
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TemperatureText(degrees =  homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.temp), sizeDegree = 20.sp, desc = "Current", sizeDesc = 18.sp)
+            TemperatureText(
+                degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.temp),
+                sizeDegree = 20.sp,
+                desc = "Current",
+                sizeDesc = 18.sp
+            )
         }
         Column(
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TemperatureText(degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.tempMax), sizeDegree = 20.sp, desc = "max", sizeDesc = 18.sp)
+            TemperatureText(
+                degrees = homeViewModel?.convertToCelsius(weatherResponse?.value?.weatherStateResponse?.main?.tempMax),
+                sizeDegree = 20.sp,
+                desc = "max",
+                sizeDesc = 18.sp
+            )
         }
 
     }
@@ -155,17 +188,18 @@ fun TemperatureRangeBar(
 @Composable
 @Preview(name = "day", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
-fun dayItemPreview(){
+fun dayItemPreview() {
     WeatherAppTheme {
         dayItem()
     }
 }
+
 @Composable
 fun dayItem(
-    dayOfWeek:String? = null,
-    weatherSymbol:Int? = null,
-    temperature:String? = null
-){
+    dayOfWeek: String? = null,
+    weatherSymbol: Int? = null,
+    temperature: String? = null
+) {
 
     Row(
         modifier = Modifier
@@ -174,9 +208,9 @@ fun dayItem(
             .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
-        ) {
+    ) {
         Text(
-            dayOfWeek ?:"Monday",
+            dayOfWeek ?: "Monday",
             fontSize = 20.sp,
             color = Color.White,
             textAlign = TextAlign.Center
@@ -185,7 +219,8 @@ fun dayItem(
         Image(
             modifier = Modifier.size(36.dp),
             painter = painterResource(id = weatherSymbol!!),
-            contentDescription ="weather icon" )
+            contentDescription = "weather icon"
+        )
 
         Text(
             "${temperature}\u00B0",
@@ -202,7 +237,7 @@ fun dayItem(
 @Composable
 @Preview(name = "day", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
-fun WeatherListPreview(){
+fun WeatherListPreview() {
     WeatherAppTheme {
         WeatherList()
     }
@@ -211,12 +246,14 @@ fun WeatherListPreview(){
 @Composable
 fun WeatherList(
     homeViewModel: HomeViewModel? = null
-){
+) {
     val forecasts = homeViewModel?.weatherForecastState?.collectAsState()
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
-    ){
-        items(forecasts?.value?.weatherForecastStateResponse?.list?.list ?: emptyList()){ weather ->
+    ) {
+        items(
+            forecasts?.value?.weatherForecastStateResponse?.list?.list ?: emptyList()
+        ) { weather ->
             dayItem(
                 dayOfWeek = homeViewModel?.getDayOfWeek(weather.dt?.times(1000L)!!),
                 weatherSymbol = homeViewModel?.getWeatherIcon(weather.weather?.get(0)?.id!!),
@@ -232,7 +269,8 @@ fun WeatherList(
 @Preview(name = "night", uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 fun HomeScreen(
     padding: PaddingValues? = null,
-    homeViewModel: HomeViewModel? = null) {
+    homeViewModel: HomeViewModel? = null
+) {
     Column {
         TopWeatherGraphic(homeViewModel)
         TemperatureRangeBar(homeViewModel)

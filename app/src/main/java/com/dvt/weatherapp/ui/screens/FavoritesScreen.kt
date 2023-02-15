@@ -209,6 +209,11 @@ fun LocationList(
             LocationListItem(
                 locationText = filteredCountry.address ?: "empty add",
                 onItemClick = { selectedCountry ->
+                    val locationDetail = favouritesViewModel?.getCoordinates(filteredCountry)
+                    filteredCountry.latitude = locationDetail?.locationDetails?.latitude
+                    filteredCountry.longitude = locationDetail?.locationDetails?.longitude
+                    filteredCountry.address = locationDetail?.address
+                    favouritesViewModel?.insertFavorite(filteredCountry)
                     navController.navigate(BottomNavItem.Favourites.screen_route+"/${filteredCountry.placeId}")
                 }
             )
