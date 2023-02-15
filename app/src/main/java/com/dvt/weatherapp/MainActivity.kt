@@ -49,7 +49,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity : ComponentActivity() {
 
     private val sessionManager by inject<SessionManager>()
-    private val homeViewModel:HomeViewModel  by viewModel()
+    private val homeViewModel:HomeViewModel by viewModel()
     private val favoritesViewModel:FavouritesViewModel by viewModel()
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 val navController = rememberNavController()
-                MultiplePermissions(this::fetchLocationUpdates)
+                MultiplePermissions(homeViewModel,this::fetchLocationUpdates)
                 MainScaffold(navController, homeViewModel, favoritesViewModel)
             }
         }
@@ -174,7 +174,7 @@ fun DefaultPreview() {
 
 @ExperimentalPermissionsApi
 @Composable
-fun MultiplePermissions(fetchLocationUpdates :() -> Unit) {
+fun MultiplePermissions(homeViewModel: HomeViewModel?,fetchLocationUpdates :() -> Unit) {
     val permissionStates = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -213,6 +213,8 @@ fun MultiplePermissions(fetchLocationUpdates :() -> Unit) {
                                You can perform some other tasks here.
                             */
                            fetchLocationUpdates.invoke()
+                            homeViewModel?.getWeather()
+                            homeViewModel?.getWeatherForecast()
                         }
                         it.shouldShowRationale -> {
                             /*Happens if a user denies the permission two times
@@ -237,6 +239,8 @@ fun MultiplePermissions(fetchLocationUpdates :() -> Unit) {
                                You can perform some other tasks here.
                             */
                             fetchLocationUpdates.invoke()
+                            homeViewModel?.getWeather()
+                            homeViewModel?.getWeatherForecast()
                         }
                         it.shouldShowRationale -> {
                             /*Happens if a user denies the permission two times

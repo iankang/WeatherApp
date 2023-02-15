@@ -5,7 +5,7 @@
         <item name="android:statusBarColor">@color/purple_700</item>
     </style>
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="android:windowBackground">@drawable/clear</item>
+        <item name="android:windowBackground">@drawable/forest_cloudy</item>
     </style>
 
 </resources>
