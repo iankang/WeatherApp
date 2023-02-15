@@ -12,7 +12,7 @@ import com.dvt.weatherapp.domain.entities.WeatherListResponseEntity
 import com.dvt.weatherapp.domain.entities.WeatherResponseEntity
 import com.dvt.weatherapp.domain.models.Weather
 
-@Database(entities = [WeatherResponseEntity::class, WeatherListResponseEntity::class, FavoriteSearchEntity::class], version = 3, exportSchema = false)
+@Database(entities = [WeatherResponseEntity::class, WeatherListResponseEntity::class, FavoriteSearchEntity::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class WeatherAppDB : RoomDatabase(){
     abstract val weatherAppDAO:WeatherAppDAO

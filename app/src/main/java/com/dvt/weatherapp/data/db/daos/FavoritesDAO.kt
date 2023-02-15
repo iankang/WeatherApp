@@ -15,7 +15,7 @@ interface FavoritesDAO {
     @Query("SELECT * FROM favourites WHERE placeId = :placeId")
     suspend fun getByPlaceId(placeId:String):FavoriteSearchEntity?
 
-    @Query("SELECT * FROM favourites group by isFavourite order by isFavourite")
+    @Query("SELECT * FROM favourites")
     suspend fun getAllFavoritesEverything():List<FavoriteSearchEntity>?
 
     @Delete

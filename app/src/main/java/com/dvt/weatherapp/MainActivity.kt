@@ -37,11 +37,11 @@ import com.dvt.weatherapp.utils.SessionManager
 import com.dvt.weatherapp.utils.locationFlow
 import com.dvt.weatherapp.viewmodels.FavouritesViewModel
 import com.dvt.weatherapp.viewmodels.HomeViewModel
+import com.dvt.weatherapp.viewmodels.StoredFavsViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
     private val sessionManager by inject<SessionManager>()
     private val homeViewModel:HomeViewModel by viewModel()
     private val favoritesViewModel:FavouritesViewModel by viewModel()
+    private val storedFavsViewModel:StoredFavsViewModel by viewModel()
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(this)
@@ -64,7 +65,7 @@ class MainActivity : ComponentActivity() {
             WeatherAppTheme {
                 val navController = rememberNavController()
                 MultiplePermissions(homeViewModel,this::fetchLocationUpdates)
-                MainScaffold(navController, homeViewModel, favoritesViewModel)
+                MainScaffold(navController, homeViewModel, favoritesViewModel,storedFavsViewModel,sessionManager)
             }
         }
     }
@@ -87,7 +88,9 @@ class MainActivity : ComponentActivity() {
 fun MainScaffold(
     navController: NavHostController?,
     homeViewModel: HomeViewModel?,
-    favouritesViewModel: FavouritesViewModel?
+    favouritesViewModel: FavouritesViewModel?,
+    storedFavsViewModel: StoredFavsViewModel?,
+    sessionManager: SessionManager?
 ) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -154,10 +157,10 @@ fun MainScaffold(
                 HomeScreen(padding,homeViewModel)
             }
             composable(NavDrawerItem.Favorites.route){
-                FavoritesScreen(padding,favouritesViewModel,navController)
+                FavoritesScreen(padding,favouritesViewModel,navController,storedFavsViewModel)
             }
             composable(NavDrawerItem.Places.route){
-                PlacesScreen(padding)
+                PlacesScreen(padding,sessionManager,storedFavsViewModel)
             }
         }
     }
@@ -167,7 +170,7 @@ fun MainScaffold(
 @Composable
 fun DefaultPreview() {
     WeatherAppTheme {
-        MainScaffold(null, null,null)
+        MainScaffold(null, null, null, null, null)
     }
 }
 

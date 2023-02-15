@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -27,26 +26,27 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.airbnb.lottie.compose.LottieAnimation
 import com.dvt.weatherapp.R
 import com.dvt.weatherapp.domain.entities.FavoriteSearchEntity
 import com.dvt.weatherapp.navigation.BottomNavItem
 import com.dvt.weatherapp.navigation.NavigationGraph
 import com.dvt.weatherapp.ui.common.lottieAnimation
 import com.dvt.weatherapp.viewmodels.FavouritesViewModel
+import com.dvt.weatherapp.viewmodels.StoredFavsViewModel
 import java.util.*
 
 @Composable
 fun FavoritesScreen(
     padding: PaddingValues? = null,
     favouritesViewModel: FavouritesViewModel? = null,
-    navController: NavHostController? = null
+    navController: NavHostController? = null,
+    storedFavsViewModel: StoredFavsViewModel?
 ) {
     val newNavController = rememberNavController()
     Scaffold(
         bottomBar = { BottomNavigation(navController = newNavController) }
     ) {
-        NavigationGraph(newNavController, favouritesViewModel!!, it)
+        NavigationGraph(newNavController, favouritesViewModel!!, it, storedFavsViewModel)
     }
 
 }
@@ -76,7 +76,7 @@ fun BottomNavigation(navController: NavController) {
                 unselectedContentColor = MaterialTheme.colors.onBackground.copy(0.4f),
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screen_route,
-                onClick = {
+                 onClick = {
                     navController.navigate(item.screen_route) {
 
                         navController.graph.startDestinationRoute?.let { screen_route ->
@@ -98,7 +98,7 @@ fun BottomNavigation(navController: NavController) {
 @Preview(name = "day", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun FavoritesScreenPreview() {
-    FavoritesScreen()
+    FavoritesScreen(storedFavsViewModel = null)
 }
 
 @Composable

@@ -15,6 +15,7 @@ import com.dvt.weatherapp.ui.screens.MainScreen
 import com.dvt.weatherapp.ui.screens.PlaceDetailScreen
 import com.dvt.weatherapp.ui.screens.StoredFavs
 import com.dvt.weatherapp.viewmodels.FavouritesViewModel
+import com.dvt.weatherapp.viewmodels.StoredFavsViewModel
 
 
 sealed class NavDrawerItem(var route: String, var icon: ImageVector, var title: String) {
@@ -31,13 +32,18 @@ sealed class BottomNavItem(var title:String, var icon:ImageVector, var screen_ro
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController, favouritesViewModel: FavouritesViewModel,paddingValues: PaddingValues) {
+fun NavigationGraph(
+    navController: NavHostController,
+    favouritesViewModel: FavouritesViewModel,
+    paddingValues: PaddingValues,
+    storedFavsViewModel: StoredFavsViewModel?
+) {
     NavHost(navController, startDestination = BottomNavItem.Search.screen_route) {
         composable(BottomNavItem.Search.screen_route) {
             MainScreen(navController,favouritesViewModel)
         }
         composable(BottomNavItem.Favourites.screen_route) {
-            StoredFavs()
+            StoredFavs(storedFavsViewModel)
         }
         composable(BottomNavItem.Favourites.screen_route + "/{placeId}") { backStackEntry ->
             val placeId = backStackEntry.arguments?.getString("placeId")
