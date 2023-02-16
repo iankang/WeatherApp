@@ -11,9 +11,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -26,21 +24,27 @@ import com.dvt.weatherapp.viewmodels.StoredFavsViewModel
 import com.dvt.weatherapp.R
 
 @Composable
-fun StoredFavs(storedFavsViewModel: StoredFavsViewModel?) {
+fun StoredFavs(storedFavsViewModel: StoredFavsViewModel?, paddingValues: PaddingValues?) {
     storedFavsViewModel?.getAllFavouriteEverything()
     val favs = storedFavsViewModel?.favouriteListState?.collectAsState()
+
 
     if(favs?.value?.size!! <= 0){
         lottieAnimation(resource = R.raw.nothing_found, size = 400.dp)
     } else {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues!!)
         ) {
-            items(items = favs?.value ?: emptyList()) {
-                storedFav(it.address,it.isFavourite,{
+            items(items = favs.value ?: emptyList()) {
+                val fav = remember {
+                    mutableStateOf(it.isFavourite!!)
+                }
+                storedFav(it.address,fav) {
                     storedFavsViewModel.toggleFavourite(it)
                     storedFavsViewModel.getAllFavouriteEverything()
-                })
+                }
             }
         }
     }
@@ -49,7 +53,7 @@ fun StoredFavs(storedFavsViewModel: StoredFavsViewModel?) {
 @Preview
 fun StoredFavsPrev(){
     WeatherAppTheme {
-        StoredFavs(null)
+        StoredFavs(null, null)
     }
 }
 
@@ -71,7 +75,7 @@ fun storedFavItemPrev(){
 }
 
 @Composable
-fun storedFav(address: String? = "Rwanda", favourite: Boolean?,onItemClick: () -> Unit){
+fun storedFav(address: String? = "Rwanda", favourite: MutableState<Boolean>?,onItemClick: () -> Unit){
     Surface(
          modifier = Modifier.fillMaxWidth(),
         shape = RectangleShape,
@@ -90,7 +94,7 @@ fun storedFav(address: String? = "Rwanda", favourite: Boolean?,onItemClick: () -
             Text(
                 address !!
             )
-            if(favourite == true) {
+            if(favourite?.value == true) {
                 Icon(
                     modifier = Modifier.clickable(enabled = true, onClick = onItemClick),
                     imageVector = Icons.Filled.Star,
@@ -98,7 +102,9 @@ fun storedFav(address: String? = "Rwanda", favourite: Boolean?,onItemClick: () -
                 )
             } else{
                 Icon(
-                    modifier = Modifier.size(24.dp).clickable(enabled = true, onClick = onItemClick),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable(enabled = true, onClick = onItemClick),
                    painter = painterResource(id = R.drawable.star_outlined),
                     contentDescription = "favourite"
                 )

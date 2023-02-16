@@ -11,7 +11,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -33,20 +35,24 @@ import com.dvt.weatherapp.navigation.NavigationGraph
 import com.dvt.weatherapp.ui.common.lottieAnimation
 import com.dvt.weatherapp.viewmodels.FavouritesViewModel
 import com.dvt.weatherapp.viewmodels.StoredFavsViewModel
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun FavoritesScreen(
     padding: PaddingValues? = null,
     favouritesViewModel: FavouritesViewModel? = null,
     navController: NavHostController? = null,
-    storedFavsViewModel: StoredFavsViewModel?
+    storedFavsViewModel: StoredFavsViewModel? = null,
+    scaffoldState: ScaffoldState? = null,
+    coroutineScope: CoroutineScope? = null
 ) {
     val newNavController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomNavigation(navController = newNavController) }
+        bottomBar = { BottomNavigation(navController = newNavController) },
+        snackbarHost = { SnackbarHost(hostState = it)}
     ) {
-        NavigationGraph(newNavController, favouritesViewModel!!, it, storedFavsViewModel)
+        NavigationGraph(newNavController, favouritesViewModel!!, it, storedFavsViewModel,scaffoldState!!,coroutineScope!!)
     }
 
 }
@@ -98,7 +104,7 @@ fun BottomNavigation(navController: NavController) {
 @Preview(name = "day", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(name = "night", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun FavoritesScreenPreview() {
-    FavoritesScreen(storedFavsViewModel = null)
+    FavoritesScreen(storedFavsViewModel = null,)
 }
 
 @Composable
@@ -185,7 +191,9 @@ fun LocationListItem(locationText: String, onItemClick: (String) -> Unit) {
             .background(MaterialTheme.colors.background)
             .height(57.dp)
             .fillMaxWidth()
-            .padding(PaddingValues(8.dp, 16.dp))
+            .padding(PaddingValues(8.dp, 16.dp)),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = locationText,
@@ -193,6 +201,11 @@ fun LocationListItem(locationText: String, onItemClick: (String) -> Unit) {
             color = Color.White,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis)
+
+        Icon(
+            imageVector = Icons.Rounded.Add,
+            contentDescription = "add favourites"
+        )
     }
 }
 
@@ -206,23 +219,29 @@ fun LocationListItemPreview() {
 fun LocationList(
     navController: NavController,
     state: MutableState<TextFieldValue>,
-    favouritesViewModel: FavouritesViewModel?
+    favouritesViewModel: FavouritesViewModel?,
+    scaffoldState: ScaffoldState?,
+    coroutineScope: CoroutineScope?,
+    paddingValues: PaddingValues?
 ) {
     val countries = favouritesViewModel?.searchListState?.collectAsState()
     var filteredCountries: List<FavoriteSearchEntity>
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    LazyColumn(modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 30.dp)) {
 
         filteredCountries = countries?.value ?: emptyList()
         items(filteredCountries) { filteredCountry ->
             LocationListItem(
                 locationText = filteredCountry.address ?: "empty add",
                 onItemClick = { selectedCountry ->
-                  favouritesViewModel?.getCoordinates(filteredCountry)
-
-//                    filteredCountry.address = locationDetail?.address
-//                    favouritesViewModel?.insertFavorite(filteredCountry)
-                    Log.e("clicked",filteredCountry.toString())
-                    navController.navigate(BottomNavItem.Favourites.screen_route+"/${filteredCountry.placeId}")
+                    favouritesViewModel?.getCoordinates(filteredCountry)
+                    coroutineScope?.launch {
+                        scaffoldState?.snackbarHostState?.showSnackbar(
+                            message = "added to favourites",
+                            duration = SnackbarDuration.Short
+                        )
+                    }
                 }
             )
         }
@@ -237,27 +256,37 @@ fun CountryListPreview() {
     LocationList(
         navController = navController,
         state = textState,
-        favouritesViewModel = null
+        favouritesViewModel = null,
+        scaffoldState = null,
+        coroutineScope = null,
+        paddingValues = null
     )
 }
 
 
 @Composable
-fun MainScreen(navController: NavController, favouritesViewModel: FavouritesViewModel?) {
+fun MainScreen(
+    navController: NavController,
+    favouritesViewModel: FavouritesViewModel?,
+    scaffoldState: ScaffoldState?,
+    coroutineScope: CoroutineScope?,
+    paddingValues: PaddingValues?
+) {
     val textState = remember { mutableStateOf(TextFieldValue("")) }
     Column {
         SearchView(textState, favouritesViewModel)
         if(textState.value.text != "") {
-            LocationList(navController = navController, state = textState, favouritesViewModel)
+            LocationList(navController = navController, state = textState, favouritesViewModel,scaffoldState,coroutineScope,paddingValues)
         } else {
             lottieAnimation(resource = R.raw.empty_search, size = 400.dp)
         }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
     val navController = rememberNavController()
-    MainScreen(navController = navController, null)
+    MainScreen(navController = navController, null, null, null, null)
 }

@@ -1,6 +1,7 @@
 package com.dvt.weatherapp.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Home
@@ -16,6 +17,7 @@ import com.dvt.weatherapp.ui.screens.PlaceDetailScreen
 import com.dvt.weatherapp.ui.screens.StoredFavs
 import com.dvt.weatherapp.viewmodels.FavouritesViewModel
 import com.dvt.weatherapp.viewmodels.StoredFavsViewModel
+import kotlinx.coroutines.CoroutineScope
 
 
 sealed class NavDrawerItem(var route: String, var icon: ImageVector, var title: String) {
@@ -36,14 +38,16 @@ fun NavigationGraph(
     navController: NavHostController,
     favouritesViewModel: FavouritesViewModel,
     paddingValues: PaddingValues,
-    storedFavsViewModel: StoredFavsViewModel?
+    storedFavsViewModel: StoredFavsViewModel?,
+    scaffoldState: ScaffoldState,
+    coroutineScope: CoroutineScope
 ) {
     NavHost(navController, startDestination = BottomNavItem.Search.screen_route) {
         composable(BottomNavItem.Search.screen_route) {
-            MainScreen(navController,favouritesViewModel)
+            MainScreen(navController,favouritesViewModel, scaffoldState, coroutineScope,paddingValues)
         }
         composable(BottomNavItem.Favourites.screen_route) {
-            StoredFavs(storedFavsViewModel)
+            StoredFavs(storedFavsViewModel,paddingValues)
         }
         composable(BottomNavItem.Favourites.screen_route + "/{placeId}") { backStackEntry ->
             val placeId = backStackEntry.arguments?.getString("placeId")

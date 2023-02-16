@@ -103,6 +103,7 @@ fun MainScaffold(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(hostState = it)},
         topBar = {
             TopAppBar(
                 backgroundColor = Color.Transparent,
@@ -157,7 +158,7 @@ fun MainScaffold(
                 HomeScreen(padding,homeViewModel)
             }
             composable(NavDrawerItem.Favorites.route){
-                FavoritesScreen(padding,favouritesViewModel,navController,storedFavsViewModel)
+                FavoritesScreen(padding,favouritesViewModel,navController,storedFavsViewModel,scaffoldState, coroutineScope)
             }
             composable(NavDrawerItem.Places.route){
                 PlacesScreen(padding,sessionManager,storedFavsViewModel)

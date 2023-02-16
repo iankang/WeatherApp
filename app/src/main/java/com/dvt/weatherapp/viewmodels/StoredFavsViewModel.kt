@@ -1,6 +1,8 @@
 package com.dvt.weatherapp.viewmodels
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.AndroidViewModel
 import com.dvt.weatherapp.domain.entities.FavoriteSearchEntity
 import com.dvt.weatherapp.repository.FavoritesRepository
@@ -14,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class StoredFavsViewModel(
     private val applicationContext: Application,
-    val favouritesRepository:FavoritesRepository
+    private val favouritesRepository:FavoritesRepository
 ):AndroidViewModel(applicationContext) {
 
 
@@ -47,6 +49,8 @@ class StoredFavsViewModel(
         coroutineScope.launch {
             favouriteEntity.isFavourite = favouriteEntity.isFavourite != true
             favouritesRepository.insertFavourites(favouriteEntity)
+            _favouriteList.value = favouritesRepository.getEverythingInFavourites()?.toMutableList()!!
         }
     }
+
 }

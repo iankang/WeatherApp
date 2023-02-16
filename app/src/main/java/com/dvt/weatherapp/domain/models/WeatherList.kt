@@ -12,7 +12,7 @@ data class WeatherList (
     @SerializedName("main")
     var main: MainForecast?,
     @SerializedName("pop")
-    var pop: Int?,
+    var pop: Double?,
     @SerializedName("sys")
     var sys: SysForecast?,
     @SerializedName("visibility")
